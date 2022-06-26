@@ -53,6 +53,23 @@ int main(int arc, char* argv[]) {
         printf("Fail! The file was not opened\n");
     }
 
+    cout << "\n--- Metadane pliku .bmp ---" << "\n\n";
+
+    cout << "1. Naglowek pliku\n" << endl;
+    fread(&File.bfType, sizeof(File.bfType), 1, file);
+    printf("   Typ pliku: %x \n", File.bfType);
+
+    fread(&File.bfSize, sizeof(File.bfSize), 1, file);
+    printf("   Rozmiar pliku: %d bajtow \n", File.bfSize);
+
+    fread(&File.bfReserved1, sizeof(File.bfReserved1), 1, file);
+    printf("   Zarezerwowane I miejsce: %d \n", File.bfReserved1);
+
+    fread(&File.bfReserved2, sizeof(File.bfReserved2), 1, file);
+    printf("   Zarezerwowane II miejsce: %d \n", File.bfReserved2);
+
+    fread(&File.bfOffBits, sizeof(File.bfOffBits), 1, file);
+    printf("   Offset: %d \n\n", File.bfOffBits);
 
 
 
@@ -63,11 +80,11 @@ int main(int arc, char* argv[]) {
         err = fclose(file);
         if (err == 0)
         {
-            printf("The file was closed\n");
+            printf("\n\nThe file was closed\n");
         }
         else
         {
-            printf("Fail! The file was not closed\n");
+            printf("\n\nFail! The file was not closed\n");
         }
     }
 
