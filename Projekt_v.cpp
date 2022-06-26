@@ -37,7 +37,7 @@ struct RGBColor {
     char B;
 } Rgb;
 
-FILE* file;
+FILE* file, *negative;
 
 int main(int arc, char* argv[]) {
 
@@ -107,8 +107,6 @@ int main(int arc, char* argv[]) {
     fread(&Picture.biClrImportant, sizeof(Picture.biClrImportant), 1, file);
     printf("   Ilosc waznych kolorow w palecie: %d \n", Picture.biClrImportant);
 
-
-
     if (file)
     {
         err = fclose(file);
@@ -121,5 +119,38 @@ int main(int arc, char* argv[]) {
             printf("\n\nFail! The file was not closed\n");
         }
     }
+
+    printf("\n---------------------------------------------------------------\n");
+
+    printf("\n--- Tworzenie pliku negatywu ---\n\n");
+
+    err = fopen_s(&negative, "negative.bmp", "w+");
+    if (err == 0)
+    {
+        printf("The negative file was opened\n");
+    }
+    else
+    {
+        printf("Fail! The negative file was not opened\n");
+    }
+
+
+
+
+
+    if (negative)
+    {
+        err = fclose(negative);
+        if (err == 0)
+        {
+            printf("\n\nThe negative file was closed\n");
+        }
+        else
+        {
+            printf("\n\nFail! The negative file was not closed\n");
+        }
+    }
+
+    
 
 }
