@@ -1,6 +1,9 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <stdio.h>
+#pragma once
+#include <stdlib.h>
+#include <limits.h>
 using namespace std;
 
 //Nagłówek pliku
@@ -34,10 +37,38 @@ struct RGBColor {
     char B;
 } Rgb;
 
+FILE* file;
+
+int main(int arc, char* argv[]) {
+
+    errno_t err;
+
+    err = fopen_s(&file, "test.bmp", "rb");
+    if (err == 0)
+    {
+        printf("The file was opened\n");
+    }
+    else
+    {
+        printf("Fail! The file was not opened\n");
+    }
 
 
-int main() {
 
-    ifstream file("test.bmp");
+
+
+
+    if (file)
+    {
+        err = fclose(file);
+        if (err == 0)
+        {
+            printf("The file was closed\n");
+        }
+        else
+        {
+            printf("Fail! The file was not closed\n");
+        }
+    }
 
 }
