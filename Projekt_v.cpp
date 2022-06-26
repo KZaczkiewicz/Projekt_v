@@ -107,18 +107,6 @@ int main(int arc, char* argv[]) {
     fread(&Picture.biClrImportant, sizeof(Picture.biClrImportant), 1, file);
     printf("   Ilosc waznych kolorow w palecie: %d \n", Picture.biClrImportant);
 
-    if (file)
-    {
-        err = fclose(file);
-        if (err == 0)
-        {
-            printf("\n\nThe file was closed\n");
-        }
-        else
-        {
-            printf("\n\nFail! The file was not closed\n");
-        }
-    }
 
     printf("\n---------------------------------------------------------------\n");
 
@@ -134,8 +122,41 @@ int main(int arc, char* argv[]) {
         printf("Fail! The negative file was not opened\n");
     }
 
+    //Tworzenie nagłówka pliku
+    fwrite(&File.bfType, sizeof(File.bfType), 1, negative);
+    fwrite(&File.bfSize, sizeof(File.bfSize), 1, negative);
+    fwrite(&File.bfReserved1, sizeof(File.bfReserved1), 1, negative);
+    fwrite(&File.bfReserved2, sizeof(File.bfReserved2), 1, negative);
+    fwrite(&File.bfOffBits, sizeof(File.bfOffBits), 1, negative);
+
+    //Tworzenie nagłówka obrazu
+    fwrite(&Picture.biSize, sizeof(Picture.biSize), 1, negative);
+    fwrite(&Picture.biWidth, sizeof(Picture.biWidth), 1, negative);
+    fwrite(&Picture.biHeight, sizeof(Picture.biHeight), 1, negative);
+    fwrite(&Picture.biPlanes, sizeof(Picture.biPlanes), 1, negative);
+    fwrite(&Picture.biBitCount, sizeof(Picture.biBitCount), 1, negative);
+    fwrite(&Picture.biCompression, sizeof(Picture.biCompression), 1, negative);
+    fwrite(&Picture.biSizeImage, sizeof(Picture.biSizeImage), 1, negative);
+    fwrite(&Picture.biXPelsPerMeter, sizeof(Picture.biXPelsPerMeter), 1, negative);
+    fwrite(&Picture.biYPelsPerMeter, sizeof(Picture.biYPelsPerMeter), 1, negative);
+    fwrite(&Picture.biClrUsed, sizeof(Picture.biClrUsed), 1, negative);
+    fwrite(&Picture.biClrImportant, sizeof(Picture.biClrImportant), 1, negative);
 
 
+    fseek(negative, sizeof(File.bfOffBits), SEEK_SET);
+
+    int bmpImg;
+    for (int i = File.bfOffBits; i < File.bfSize; i++)
+    {
+        fseek(file, i, SEEK_SET);
+        fseek(negative, i, SEEK_SET);
+        fread(&bmpImg, 3, 1, file);
+        bmpImg = INT_MAX - bmpImg;
+        fwrite(&bmpImg, 3, 1, negative);
+    }
+   
+    
+    printf("\nUtworzono negatyw");
 
 
     if (negative)
@@ -151,6 +172,17 @@ int main(int arc, char* argv[]) {
         }
     }
 
-    
+    if (file)
+    {
+        err = fclose(file);
+        if (err == 0)
+        {
+            printf("\n\nThe file was closed\n");
+        }
+        else
+        {
+            printf("\n\nFail! The file was not closed\n");
+        }
+    }
 
 }
